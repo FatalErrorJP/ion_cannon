@@ -10,12 +10,25 @@ on_ship_built = {
 }
 
 #######################################
-# 船の無効化時のイベント
+# 基地側勝利時のイベント
+#######################################
+# This = owner of fleet 1 (winner)
+# From = owner of fleet 2 (loser)
+# FromFrom = fleet 1
+# FromFromFrom = fleet 2
+on_space_battle_won = {
+	events = {
+		break.11
+	}
+}
+
+#######################################
+# 基地側敗北時のイベント
 #######################################
 # This = Ship
 # From = Disabler Ship
 on_ship_disabled = {
 	events = {
-		break.11
+		break.21
 	}
 }

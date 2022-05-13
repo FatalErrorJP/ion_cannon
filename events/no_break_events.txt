@@ -9,6 +9,7 @@ namespace = break
 # From = Planet
 ###########################################################
 # 船体値が0になったら壊れる代わりに無効になるようにする
+# 新たに建造された防衛プラットフォームとイオン砲が対象
 ship_event = {
 	id = break.1
 	hide_window = yes
@@ -23,29 +24,58 @@ ship_event = {
 	}
 }
 
-###########################################################
-# 船の無効化時のイベント
-# This = Ship
-# From = Disabler Ship
-###########################################################
-# 前哨地の場合は、一度防衛プラットフォームが壊れると二度と回復しないため、破壊する
-ship_event = {
+#######################################
+# 基地側勝利時のイベント
+# This = owner of fleet 1 (winner)
+# From = owner of fleet 2 (loser)
+# FromFrom = fleet 1
+# FromFromFrom = fleet 2
+#######################################
+# 防衛プラットフォームとイオン砲の無効化を解除する
+country_event = {
 	id = break.11
 	hide_window = yes
 	is_triggered_only = yes
 
-	trigger = {
-		is_ship_class = shipclass_military_station
-		orbit = {
-			solar_system = {
-				starbase = {
-					has_starbase_size = starbase_outpost
+	immediate = {
+		fromfrom = {
+			every_owned_ship = {
+				limit = {
+					is_ship_class = shipclass_military_station
+					is_disabled = yes
 				}
+				set_disabled = no
 			}
 		}
 	}
+}
+
+#######################################
+# 基地側敗北時のイベント
+# This = Ship
+# From = Disabler Ship
+#######################################
+# 防衛プラットフォームとイオン砲の無効化を解除する
+ship_event = {
+	id = break.21
+	hide_window = yes
+	is_triggered_only = yes
+
+	trigger = {
+		is_ship_class = shipclass_starbase
+	}
 
 	immediate = {
-		destroy_ship = this
+		fleet = {
+			every_owned_ship = {
+				limit = {
+					is_ship_class = shipclass_military_station
+					is_disabled = yes
+				}
+				set_disabled = no
+				log = "break.21"
+			}
+		}
 	}
 }
+
